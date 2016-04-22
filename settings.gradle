@@ -1,0 +1,3 @@
+def projects = ["ehcache", "hibernate", "jackson"]
+println projects
+include (*projects)
