@@ -16,7 +16,7 @@ public class BookServiceTest {
 	@Before
 	public void setUp() {
 		bookService = new BookService();
-		bookService.setSessionFactory(SessionFactoryUtils.createSessionFactory(Book.class, Publisher.class));
+		bookService.setSessionFactory(SessionFactoryUtils.createStandardSessionFactory());
 	}
 	
 	@Test

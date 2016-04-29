@@ -4,8 +4,16 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
+import de.claudioaltamura.hibernate.entities.Book;
+import de.claudioaltamura.hibernate.entities.Publisher;
+
 public class SessionFactoryUtils {
 
+	public static SessionFactory createStandardSessionFactory()
+	{
+		return SessionFactoryUtils.createSessionFactory(Book.class, Publisher.class);
+	}
+	
 	public static SessionFactory createSessionFactory(Class<?>... classes) {
 		final Configuration configuration = new Configuration();
 		for(Class<?> clazz: classes)
