@@ -24,7 +24,7 @@ public class PublisherService {
 		hibernateTemplate.execute(new HibernateCallback<Publisher>() {
 			@Override
 			public Publisher doInHibernate(Session session) {
-				session.saveOrUpdate(publisher);
+				session.persist(publisher);
 				return publisher;
 			}
 		});

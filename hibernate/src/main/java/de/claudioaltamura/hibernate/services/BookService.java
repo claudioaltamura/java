@@ -21,7 +21,7 @@ public class BookService {
 		hibernateTemplate.execute(new HibernateCallback<Book>() {
 			@Override
 			public Book doInHibernate(Session session) {
-				session.saveOrUpdate(book);
+				session.persist(book);
 				return book;
 			}
 		});

@@ -7,6 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -19,6 +21,10 @@ public class Publisher {
 	private String name = "";
 	
 	@OneToMany(cascade=CascadeType.ALL)
+	@JoinTable(
+			name="PUBLISHER_BOOK",
+	        joinColumns = @JoinColumn( name="PUBLISHER_ID"),
+	        inverseJoinColumns = @JoinColumn( name="BOOK_ID"))
 	private List<Book> books = new ArrayList<>();
 
 	public Long getId() {
