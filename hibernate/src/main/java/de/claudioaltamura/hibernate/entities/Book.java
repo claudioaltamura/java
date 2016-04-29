@@ -3,9 +3,11 @@ package de.claudioaltamura.hibernate.entities;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Book {
@@ -16,6 +18,9 @@ public class Book {
 	private String isbn;
 	private BigDecimal price = new BigDecimal(0.0);
 	private String description = "";
+
+	@ManyToOne(cascade=CascadeType.ALL)
+	private Publisher publisher;
 
 	@GeneratedValue
 	@Id
@@ -76,5 +81,13 @@ public class Book {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
+	public Publisher getPublisher() {
+		return publisher;
+	}
+
+	public void setPublisher(Publisher publisher) {
+		this.publisher = publisher;
+	}
+
 }

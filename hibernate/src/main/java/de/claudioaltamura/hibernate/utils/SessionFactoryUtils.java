@@ -6,9 +6,12 @@ import org.hibernate.cfg.Configuration;
 
 public class SessionFactoryUtils {
 
-	public static SessionFactory createSessionFactory(Class<?> clazz) {
+	public static SessionFactory createSessionFactory(Class<?>... classes) {
 		final Configuration configuration = new Configuration();
-		configuration.addAnnotatedClass(clazz);
+		for(Class<?> clazz: classes)
+		{
+			configuration.addAnnotatedClass(clazz);
+		}
 		
 		return configuration.buildSessionFactory(
 				new StandardServiceRegistryBuilder().build() );

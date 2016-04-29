@@ -19,13 +19,33 @@ public class BookService {
 	public void addBook(final Book book) {
 		HibernateTransactionTemplate hibernateTemplate = new HibernateTransactionTemplate(sessionFactory);
 		hibernateTemplate.execute(new HibernateCallback<Book>() {
-
 			@Override
 			public Book doInHibernate(Session session) {
-				session.persist(book);
+				session.saveOrUpdate(book);
 				return book;
 			}
-			
+		});
+	}
+
+	public void updateBook(final Book book) {
+		HibernateTransactionTemplate hibernateTemplate = new HibernateTransactionTemplate(sessionFactory);
+		hibernateTemplate.execute(new HibernateCallback<Book>() {
+			@Override
+			public Book doInHibernate(Session session) {
+				session.saveOrUpdate(book);
+				return book;
+			}
+		});
+	}
+	
+	public void deleteBook(final Book book) {
+		HibernateTransactionTemplate hibernateTemplate = new HibernateTransactionTemplate(sessionFactory);
+		hibernateTemplate.execute(new HibernateCallback<Book>() {
+			@Override
+			public Book doInHibernate(Session session) {
+				session.delete(book);
+				return book;
+			}
 		});
 	}
 	

@@ -13,7 +13,7 @@ public class HibernateTransactionTemplate {
 	private SessionFactory sessionFactory;
 	
 	public HibernateTransactionTemplate(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+		this.sessionFactory = sessionFactory; 
 	}
 	
 	public <T> T execute(HibernateCallback<T> hibernateCallback) {
