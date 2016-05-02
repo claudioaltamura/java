@@ -2,32 +2,46 @@ package de.claudioaltamura.hibernate.entities;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table( name = "BOOKS" )
+@Table(name = "BOOKS", uniqueConstraints = {
+		@UniqueConstraint(columnNames = "title")})
 public class Book {
-
-	private Date date;
-	private String title;
-	private int pages;
-	private String isbn;
-	private BigDecimal price = new BigDecimal(0.0);
-	private String description = "";
-
-	@ManyToOne(cascade=CascadeType.ALL)
-	private Publisher publisher;
 
 	@GeneratedValue
 	@Id
 	private Long id;
+	
+	private Date date;
+	
+	@Column(name = "title", unique = true, nullable = false, length = 100)
+	private String title;
+	
+	private int pages;
+	
+	private String isbn;
+	
+	private BigDecimal price = new BigDecimal(0.0);
+	
+	private String description = "";
+	
+	@ManyToOne(cascade=CascadeType.ALL)
+	private Publisher publisher;
 
+	@ManyToMany(cascade=CascadeType.ALL)
+	private List<Author> authors;
+	
 	public Date getDate() {
 		return date;
 	}
@@ -92,4 +106,12 @@ public class Book {
 		this.publisher = publisher;
 	}
 
+	public List<Author> getAuthors() {
+		return authors;
+	}
+
+	public void setAuthors(List<Author> authors) {
+		this.authors = authors;
+	}
+	
 }

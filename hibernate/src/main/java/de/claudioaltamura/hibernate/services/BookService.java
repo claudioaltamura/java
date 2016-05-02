@@ -1,5 +1,6 @@
 package de.claudioaltamura.hibernate.services;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -65,8 +66,9 @@ public class BookService {
 //				Book book = (Book) session.createCriteria(Book.class)
 //						.add( Restrictions.eq( "id", id ))
 //						.uniqueResult();
+				if(book != null)
+					Hibernate.initialize(book.getAuthors());
 				
-				//Hibernate.initialize(book.getAuthors());
 				return book;
 			}
 			

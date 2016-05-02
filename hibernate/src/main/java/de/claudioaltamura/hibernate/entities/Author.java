@@ -1,6 +1,5 @@
 package de.claudioaltamura.hibernate.entities;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -9,24 +8,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 
 @Entity
-public class Publisher {
-	
+public class Author {
+
 	@GeneratedValue
 	@Id
 	private Long id;
 
 	private String name = "";
-	
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinTable(
-			name="PUBLISHER_BOOK",
-	        joinColumns = @JoinColumn(name="PUBLISHER_ID", nullable = false, updatable = false),
-	        inverseJoinColumns = @JoinColumn( name="BOOK_ID", nullable = false, updatable = false))
-	private List<Book> books = new ArrayList<>();
 
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name = "author_book", joinColumns = { 
+			@JoinColumn(name = "AUTHOR_ID", nullable = false, updatable = false) }, 
+			inverseJoinColumns = { @JoinColumn(name = "BOOK_ID", 
+					nullable = false, updatable = false) })
+	private List<Book> books;
+	
 	public Long getId() {
 		return id;
 	}
@@ -38,7 +37,7 @@ public class Publisher {
 	public String getName() {
 		return name;
 	}
-
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -50,5 +49,5 @@ public class Publisher {
 	public void setBooks(List<Book> books) {
 		this.books = books;
 	}
-
+	
 }
