@@ -5,31 +5,21 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.SessionFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.claudioaltamura.hibernate.dao.impl.PublisherDaoImpl;
 import de.claudioaltamura.hibernate.entities.Book;
 import de.claudioaltamura.hibernate.entities.Publisher;
-import de.claudioaltamura.hibernate.utils.HibernateTransactionTemplate;
 import de.claudioaltamura.hibernate.utils.SessionFactoryUtils;
 
 public class PublisherServiceTest {
 
 	private PublisherService publisherService;
-	private SessionFactory sessionFactory;
 
 	@Before
 	public void setUp() {
-		sessionFactory = SessionFactoryUtils.createStandardSessionFactory();
-
 		publisherService = new PublisherService();
-		PublisherDaoImpl publisherDaoImpl = new PublisherDaoImpl();
-		publisherDaoImpl.setSessionFactory(sessionFactory);
-		publisherService.setPublisherDao(publisherDaoImpl);
-		HibernateTransactionTemplate<Publisher> publisherTransactionTemplate = new HibernateTransactionTemplate<Publisher>(sessionFactory);
-		publisherService.setHibernateTemplate(publisherTransactionTemplate);
+		publisherService.setSessionFactory(SessionFactoryUtils.createStandardSessionFactory());
 	}
 	
 	@Test

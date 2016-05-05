@@ -3,42 +3,43 @@ package de.claudioaltamura.hibernate.services;
 import java.util.List;
 
 import org.hibernate.Hibernate;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
-import de.claudioaltamura.hibernate.dao.AuthorDao;
 import de.claudioaltamura.hibernate.entities.Author;
-import de.claudioaltamura.hibernate.utils.HibernateExecuteCallback;
-import de.claudioaltamura.hibernate.utils.HibernateQueryCallback;
+import de.claudioaltamura.hibernate.utils.HibernateCallback;
 import de.claudioaltamura.hibernate.utils.HibernateTransactionTemplate;
 
 public class AuthorService {
 
-	private HibernateTransactionTemplate<Author> transactionTemplate; 
-
-	private AuthorDao dao;
+	private SessionFactory sessionFactory;
 	
-	public void setHibernateTemplate(HibernateTransactionTemplate<Author> transactionTemplate) {
-		this.transactionTemplate = transactionTemplate;
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 	
-	public void setAuthorDao(AuthorDao dao) {
-		this.dao = dao;
-	}
-
 	public void addAuthor(final Author author) {
-		transactionTemplate.execute(new HibernateExecuteCallback<Author>() {
+		HibernateTransactionTemplate hibernateTemplate = new HibernateTransactionTemplate(sessionFactory);
+		hibernateTemplate.execute(new HibernateCallback<Author>() {
 			@Override
-			public Author execute() {
-				dao.create(author);
+			public Author doInHibernate(Session session) {
+				session.persist(author);
 				return author;
 			}
 		});
 	}
 	
 	public Author getAuthor(final long id) {
-		return transactionTemplate.execute(new HibernateExecuteCallback<Author>() {
+		HibernateTransactionTemplate hibernateTemplate = new HibernateTransactionTemplate(sessionFactory);
+		return hibernateTemplate.execute(new HibernateCallback<Author>() {
+
 			@Override
-			public Author execute() {
-				Author author = dao.get(id);
+			public Author doInHibernate(Session session) {
+				
+				Query query = session.createQuery("SELECT a FROM Author a WHERE a.id=:id");
+				query.setParameter("id", id);
+				Author author = (Author) query.uniqueResult();
 				Hibernate.initialize(author.getBooks());
 				return author;
 			}			
@@ -46,10 +47,14 @@ public class AuthorService {
 	}
 	
 	public List<Author> findAll() {
-		return transactionTemplate.query(new HibernateQueryCallback<Author>() {
+		HibernateTransactionTemplate hibernateTemplate = new HibernateTransactionTemplate(sessionFactory);
+		return hibernateTemplate.execute(new HibernateCallback<List<Author>>() {
+
+			@SuppressWarnings("unchecked")
 			@Override
-			public List<Author> query() {
-				return dao.loadAll();
+			public List<Author> doInHibernate(Session session) {
+				Query query = session.createQuery("FROM Author");
+				return query.list();
 			}
 		});
 	}

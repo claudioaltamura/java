@@ -1,61 +1,77 @@
 package de.claudioaltamura.hibernate.services;
 
 import org.hibernate.Hibernate;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
-import de.claudioaltamura.hibernate.dao.BookDao;
 import de.claudioaltamura.hibernate.entities.Book;
-import de.claudioaltamura.hibernate.utils.HibernateExecuteCallback;
+import de.claudioaltamura.hibernate.utils.HibernateCallback;
 import de.claudioaltamura.hibernate.utils.HibernateTransactionTemplate;
 
 public class BookService {
 
-	private HibernateTransactionTemplate<Book> transactionTemplate; 
-
-	private BookDao dao;
+	private SessionFactory sessionFactory;
 	
-	public void setHibernateTemplate(HibernateTransactionTemplate<Book> transactionTemplate) {
-		this.transactionTemplate = transactionTemplate;
-	}
-	
-	public void setBookDao(BookDao dao) {
-		this.dao = dao;
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 	
 	public void addBook(final Book book) {
-		transactionTemplate.execute(new HibernateExecuteCallback<Book>() {
-			public Book execute() {
-				dao.create(book);
+		HibernateTransactionTemplate hibernateTemplate = new HibernateTransactionTemplate(sessionFactory);
+		hibernateTemplate.execute(new HibernateCallback<Book>() {
+			@Override
+			public Book doInHibernate(Session session) {
+				session.persist(book);
 				return book;
 			}
 		});
 	}
 
 	public void updateBook(final Book book) {
-		transactionTemplate.execute(new HibernateExecuteCallback<Book>() {
-			public Book execute() {
-				dao.update(book);
+		HibernateTransactionTemplate hibernateTemplate = new HibernateTransactionTemplate(sessionFactory);
+		hibernateTemplate.execute(new HibernateCallback<Book>() {
+			@Override
+			public Book doInHibernate(Session session) {
+				session.saveOrUpdate(book);
 				return book;
 			}
 		});
 	}
 	
 	public void deleteBook(final Book book) {
-		transactionTemplate.execute(new HibernateExecuteCallback<Book>() {
-			public Book execute() {
-				dao.delete(book);
+		HibernateTransactionTemplate hibernateTemplate = new HibernateTransactionTemplate(sessionFactory);
+		hibernateTemplate.execute(new HibernateCallback<Book>() {
+			@Override
+			public Book doInHibernate(Session session) {
+				session.delete(book);
 				return book;
 			}
 		});
 	}
 	
 	public Book getBook(final long id) {
-		return transactionTemplate.execute(new HibernateExecuteCallback<Book>() {
-			public Book execute() {
-				Book book = dao.get(id);
+		HibernateTransactionTemplate hibernateTemplate = new HibernateTransactionTemplate(sessionFactory);
+		return hibernateTemplate.execute(new HibernateCallback<Book>() {
+
+			@Override
+			public Book doInHibernate(Session session) {
+				//Query Cache
+				//Book book = (Book) session.get(Book.class, id );
+				
+				Query query = session.createQuery("SELECT b FROM Book b WHERE b.id=:id");
+				query.setParameter("id", id);
+				Book book = (Book) query.uniqueResult();
+				
+//				Book book = (Book) session.createCriteria(Book.class)
+//						.add( Restrictions.eq( "id", id ))
+//						.uniqueResult();
 				if(book != null)
 					Hibernate.initialize(book.getAuthors());
+				
 				return book;
 			}
+			
 		});
 	}	
 	
