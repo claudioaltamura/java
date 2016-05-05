@@ -4,7 +4,6 @@ import org.hibernate.Hibernate;
 
 import de.claudioaltamura.hibernate.dao.BookDao;
 import de.claudioaltamura.hibernate.entities.Book;
-import de.claudioaltamura.hibernate.utils.HibernateCallback;
 import de.claudioaltamura.hibernate.utils.HibernateExecuteCallback;
 import de.claudioaltamura.hibernate.utils.HibernateTransactionTemplate;
 
