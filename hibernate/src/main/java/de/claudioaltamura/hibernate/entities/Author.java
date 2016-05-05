@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -19,7 +20,7 @@ public class Author {
 
 	private String name = "";
 
-	@ManyToMany(cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.EAGER , cascade=CascadeType.ALL)
 	@JoinTable(name = "author_book", joinColumns = { 
 			@JoinColumn(name = "AUTHOR_ID", nullable = false, updatable = false) }, 
 			inverseJoinColumns = { @JoinColumn(name = "BOOK_ID", 

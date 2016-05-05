@@ -1,11 +1,15 @@
 package de.claudioaltamura.hibernate.utils;
 
-import java.sql.SQLException;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
+import java.util.List;
 
 public abstract class HibernateCallback<T> {
 
-	public abstract T doInHibernate(Session session) throws HibernateException, SQLException;
+	public T executeInTransaction() {
+		throw new UnsupportedOperationException();
+	}
+
+	public List<T> queryInTransaction() {
+		throw new UnsupportedOperationException();
+	}
+	
 }

@@ -11,27 +11,34 @@ import org.hibernate.SessionFactory;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.claudioaltamura.hibernate.dao.impl.BookDaoImpl;
+import de.claudioaltamura.hibernate.dao.impl.PublisherDaoImpl;
 import de.claudioaltamura.hibernate.entities.Author;
 import de.claudioaltamura.hibernate.entities.Book;
 import de.claudioaltamura.hibernate.entities.Publisher;
+import de.claudioaltamura.hibernate.utils.HibernateTransactionTemplate;
 import de.claudioaltamura.hibernate.utils.SessionFactoryUtils;
 
 public class BookServiceTest {
 
 	private BookService bookService;
-	private SessionFactory sessionFactory;
+	private SessionFactory sessionFactory = SessionFactoryUtils.createStandardSessionFactory();
 	
 	@Before
 	public void setUp() {
+		BookDaoImpl dao = new BookDaoImpl();
+		dao.setSessionFactory(sessionFactory);
+		HibernateTransactionTemplate<Book> transactionTemplate = new HibernateTransactionTemplate<Book>(sessionFactory);
+
 		bookService = new BookService();
-		sessionFactory = SessionFactoryUtils.createStandardSessionFactory();
-		bookService.setSessionFactory(sessionFactory);
+		bookService.setHibernateTemplate(transactionTemplate);
+		bookService.setBookDao(dao);
 	}
 	
 	@Test
 	public void add() {
 		Book book = new Book();
-		book.setTitle("My Book");
+		book.setTitle("My Book 1");
 		
 		Publisher publisher = new Publisher();
 		publisher.setName("My Publisher");
@@ -46,8 +53,15 @@ public class BookServiceTest {
 		authors.add(author2);
 		book.setAuthors(authors);
 
-		bookService.addBook(book);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
+		bookService.addBook(book);
+		
 		Book loadedBook = bookService.getBook(book.getId());
 		assertEquals(book.getTitle(), loadedBook.getTitle());
 		assertEquals(book.getAuthors().size(), loadedBook.getAuthors().size());
@@ -63,7 +77,7 @@ public class BookServiceTest {
 		bookService.addBook(book);
 
 		Book loadedBook = bookService.getBook(book.getId());
-		loadedBook.setTitle("My New Book2");
+		loadedBook.setTitle("My New Book21");
 		bookService.updateBook(loadedBook);
 		
 		Book updatedBook = bookService.getBook(book.getId());
@@ -73,7 +87,7 @@ public class BookServiceTest {
 	@Test
 	public void delete() {
 		Book book = new Book();
-		book.setTitle("My Book");
+		book.setTitle("My Book3");
 		Publisher publisher = new Publisher();
 		publisher.setName("My Publisher");
 		book.setPublisher(publisher);
@@ -85,18 +99,22 @@ public class BookServiceTest {
 		assertNull(loadedBook);
 		
 		PublisherService publisherService = new PublisherService();
-		publisherService.setSessionFactory(sessionFactory);
+		PublisherDaoImpl publisherDaoImpl = new PublisherDaoImpl();
+		publisherDaoImpl.setSessionFactory(sessionFactory);
+		publisherService.setPublisherDao(publisherDaoImpl);
+		HibernateTransactionTemplate<Publisher> publisherTransactionTemplate = new HibernateTransactionTemplate<Publisher>(sessionFactory);
+		publisherService.setHibernateTemplate(publisherTransactionTemplate);
 		assertTrue(publisherService.findAll().size()==0);
 	}
 	
 	@Test(expected=RuntimeException.class)
 	public void uniqueTitle() {
 		Book book = new Book();
-		book.setTitle("My Book");
+		book.setTitle("My Book4");
 		bookService.addBook(book);
 
 		Book thesamebook = new Book();
-		thesamebook.setTitle("My Book");
+		thesamebook.setTitle("My Book4");
 		bookService.addBook(thesamebook);
 	}
 
