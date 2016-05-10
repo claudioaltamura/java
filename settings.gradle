@@ -1,3 +1,3 @@
-def projects = ["ehcache", "hibernate", "jackson"]
+def projects = ["ehcache", "dropwizard", "hibernate", "jackson"]
 println projects
 include (*projects)

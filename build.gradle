@@ -1,15 +1,18 @@
 defaultTasks 'clean', 'build'
 
 task wrapper(type: Wrapper) {
-    gradleVersion = "2.12"
+    gradleVersion = "2.13"
 }
 
 subprojects {
 
 	apply plugin: "java"
 	apply plugin: "eclipse"
-	//sourceCompatibility = 1.8
-	//targetCompatibility = 1.8
+	
+	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+	
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
 
 	repositories {
 	    mavenCentral()
