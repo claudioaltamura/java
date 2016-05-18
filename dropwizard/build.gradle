@@ -1,3 +1,9 @@
+apply plugin: 'application'
+
+project.ext {
+    configPath = "$rootProject.projectDir/dropwizard/config/"
+}
+
 dependencies {
 
  	compile 'io.dropwizard:dropwizard-core:0.9.2'
@@ -9,4 +15,10 @@ dependencies {
 
 	testCompile 'org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:2.22.1'
 
+}
+
+mainClassName = "de.claudioaltamura.os.dropwizard.BooklibraryApplication"
+
+run {
+    args 'server', configPath + 'booklibrary.yml'
 }
