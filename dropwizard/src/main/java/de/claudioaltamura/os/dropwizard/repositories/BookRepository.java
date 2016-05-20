@@ -2,8 +2,9 @@ package de.claudioaltamura.os.dropwizard.repositories;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
+import de.claudioaltamura.os.dropwizard.exceptionhandling.DuplicateEntryException;
+import de.claudioaltamura.os.dropwizard.exceptionhandling.ObjectNotFoundException;
 import de.claudioaltamura.os.dropwizard.model.Book;
 
 public class BookRepository {
@@ -11,19 +12,30 @@ public class BookRepository {
 	private Map<Long, Book> books = new HashMap<>();
 
 	public BookRepository() {
-		Book book = null;
-
-		book = new Book();
-		book.setTitle("My Book");
-		
-		books.put(Long.valueOf(1), book);
+		initRepository();
 	}
 	
-	public Optional<Book> load(long id) {
-		return Optional.ofNullable(books.get(Long.valueOf(id)));		
+	private void initRepository() {
+		Book book = new Book();
+		book.setId(Long.valueOf(1));
+		book.setTitle("My Book");
+		
+		books.put(book.getId(), book);
 	}
 
-	public Book save(Book book) {
+	public Book load(long id) throws ObjectNotFoundException {
+		Book book = books.get(Long.valueOf(id));
+		
+		if(book == null)
+			throw new ObjectNotFoundException("book with id " + id + " not found!");
+		
+		return book;
+	}
+
+	public Book create(Book book) throws RuntimeException {
+		if(books.containsKey(book.getId()))
+			throw new DuplicateEntryException("book with id " + book.getId() + " already exists!");
+		
 		return books.put(book.getId(), book);
 	}
 	
