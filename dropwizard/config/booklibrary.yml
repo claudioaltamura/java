@@ -1,4 +1,4 @@
 appName: Booklibrary
 
 logging:
-  level: DEBUG
+  level: INFO
