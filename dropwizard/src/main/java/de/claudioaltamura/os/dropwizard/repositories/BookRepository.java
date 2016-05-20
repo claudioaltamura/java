@@ -2,6 +2,7 @@ package de.claudioaltamura.os.dropwizard.repositories;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import de.claudioaltamura.os.dropwizard.exceptionhandling.DuplicateEntryException;
 import de.claudioaltamura.os.dropwizard.exceptionhandling.ObjectNotFoundException;
@@ -33,10 +34,29 @@ public class BookRepository {
 	}
 
 	public Book create(Book book) throws RuntimeException {
-		if(books.containsKey(book.getId()))
-			throw new DuplicateEntryException("book with id " + book.getId() + " already exists!");
+		if(book.getId() != null) {
+			if(books.containsKey(book.getId()))
+				throw new DuplicateEntryException("book with id " + book.getId() + " already exists!");
+		} else {
+			
+			long max = findMax(books.keySet());
+			book.setId(max + 1);
+		}
 		
-		return books.put(book.getId(), book);
+		books.put(book.getId(), book);
+		
+		return book;
+	}
+
+	private long findMax(Set<Long> keySet) {
+		long max = 0;
+		for (Long key : keySet) {
+			long keyValue = key.longValue();
+			if(keyValue > max)
+				max = keyValue;
+		}
+
+		return max;
 	}
 	
 }

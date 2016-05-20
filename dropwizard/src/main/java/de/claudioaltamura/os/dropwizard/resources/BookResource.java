@@ -1,21 +1,27 @@
 package de.claudioaltamura.os.dropwizard.resources;
 
+import java.net.URI;
+
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import de.claudioaltamura.os.dropwizard.model.Book;
 import de.claudioaltamura.os.dropwizard.repositories.BookRepository;
 
 @Path("/books")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class BookResource {
-	
+
 	private BookRepository bookRepository;
 
 	public BookResource(BookRepository bookRepository) {
@@ -24,18 +30,18 @@ public class BookResource {
 
 	@GET
 	@Path("{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response get(@PathParam("id") long id) {
+	public Response get(@PathParam("id") Long id) {
 		Book book = bookRepository.load(id);
 
-		return Response.status(Status.OK).entity(book).build();
+		return Response.ok().entity(book).build();
 	}
-	
+
 	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response addBook(Book book) {
+	public Response addBook(@Valid Book book, @Context UriInfo uriInfo) {
 		Book createdBook = bookRepository.create(book);
-		
-		return Response.status(Status.CREATED).entity(createdBook).build();
+
+		URI uri = uriInfo.getAbsolutePathBuilder()
+				.path(String.valueOf(createdBook.getId())).build();
+		return Response.created(uri).entity(createdBook).build();
 	}
 }
