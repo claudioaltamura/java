@@ -2,3 +2,9 @@ appName: Booklibrary
 
 logging:
   level: INFO
+  
+  appenders:
+  - type: file
+    currentLogFilename: ./logs/booklibrary.log
+    archivedLogFilenamePattern: ./logs/booklibrary-%d.log.gz
+    archivedFileCount: 5
