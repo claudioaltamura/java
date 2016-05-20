@@ -22,3 +22,10 @@ mainClassName = "de.claudioaltamura.os.dropwizard.BooklibraryApplication"
 run {
     args 'server', configPath + 'booklibrary.yml'
 }
+
+task(runDebug, dependsOn: 'classes', type: JavaExec) {
+    args 'server', configPath + 'booklibrary.yml'
+    main "de.claudioaltamura.os.dropwizard.BooklibraryApplication"
+    classpath = sourceSets.main.runtimeClasspath
+    jvmArgs = ["-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"]
+}
