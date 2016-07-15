@@ -8,6 +8,8 @@ public class User {
 	private int age = 111;
 	private String name = "me";
 	private List<String> messages = new ArrayList<String>() {
+		private static final long serialVersionUID = 1L;
+
 		{
 			add("msg 1");
 			add("msg 2");
