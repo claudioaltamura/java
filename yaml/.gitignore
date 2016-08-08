@@ -1,0 +1,8 @@
+/build/
+/bin/
+/.settings/
+/test-output/
+/.classpath
+/.project
+/configuration-new.yaml
+/todo.txt
