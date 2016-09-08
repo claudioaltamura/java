@@ -3,10 +3,8 @@ package de.claudioaltamura.os.yaml;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.Map;
 
 import org.junit.Before;
@@ -21,21 +19,18 @@ public class ConfigurationSnakeYAMLTest {
 	
 	private Yaml yaml;
 	private InputStream configurationFile;
-	private String fileName = "configuration-new.yaml";
 
 	@Before
 	public void setUp() throws IOException {
 		DumperOptions options = new DumperOptions();
 		options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 		yaml = new Yaml(options);
-		configurationFile = Configuration.class.getClassLoader().getResourceAsStream("configuration.yaml");
-
-		Files.deleteIfExists(new File(fileName).toPath());
 	}
-	
 	
 	@Test
 	public void read() {
+		configurationFile = Configuration.class.getClassLoader().getResourceAsStream("configuration.yaml");
+
 	    @SuppressWarnings("unchecked")
 		Map<String, Map<String, Object>> configuration = (Map<String, Map<String, Object>>) yaml.load(configurationFile);
 	    
@@ -45,7 +40,9 @@ public class ConfigurationSnakeYAMLTest {
 	
 	@Test
 	public void write() throws JsonParseException, JsonMappingException, IOException {
-	    @SuppressWarnings("unchecked")
+		configurationFile = Configuration.class.getClassLoader().getResourceAsStream("configuration.yaml");
+
+		@SuppressWarnings("unchecked")
 		Map<String, Map<String, Object>> configuration = (Map<String, Map<String, Object>>) yaml.load(configurationFile);
 
 		//just writing out
@@ -53,4 +50,29 @@ public class ConfigurationSnakeYAMLTest {
 	    assertTrue(output.contains("100"));
 	}
 
+	@Test
+	public void readJavaBeans() {
+		configurationFile = Configuration.class.getClassLoader().getResourceAsStream("configuration-snakeyaml.yaml");
+
+		Configuration configuration = (Configuration) yaml.load(configurationFile);
+
+	    assertEquals("abc", configuration.getServer().getId());
+		//and so on
+	}	
+	
+	@Test
+	public void writeJavaBeans() throws JsonParseException, JsonMappingException, IOException {
+		Configuration configuration = new Configuration();
+		Server server = new Server();
+		server.setId("abc");
+		Database database = new Database();
+		database.setUser("scott");
+		configuration.setServer(server);
+		configuration.setDatabase(database);
+
+		//just writing out
+	    String output = yaml.dump(configuration);
+	    //System.out.println(output);
+	}	
+	
 }

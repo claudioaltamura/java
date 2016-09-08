@@ -1,0 +1,10 @@
+!!de.claudioaltamura.os.yaml.Configuration
+server:
+  id: abc
+  timeoutMs: 0
+  type: null
+database:
+  password: null
+  table: null
+  url: null
+  user: scott
