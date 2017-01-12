@@ -64,9 +64,9 @@ public class BookTest {
 	public void unexpectedNull() throws JSONException {
         JSONCompareResult result = JSONCompare.compareJSON("{\"name\":\"The book\",\"pages\":100}", "{\"name\":\"The book\",\"pages\":null}", JSONCompareMode.LENIENT);
         assertTrue(result.failed());
-        assertTrue(result.isUnexpectedOnField());
-        assertEquals(result.getFieldUnexpected().size(), 1);
-        FieldComparisonFailure fieldComparisonFailure = result.getFieldUnexpected().get(0);
+        assertTrue(result.isFailureOnField());
+        assertEquals(result.getFieldFailures().size(), 1);
+        FieldComparisonFailure fieldComparisonFailure = result.getFieldFailures().get(0);
         assertEquals("pages",fieldComparisonFailure.getField());
 	}
 
