@@ -19,5 +19,6 @@ public class JsonAssertTestUtils {
                 return item.failed() && expectedMessage.matches(item.getMessage());
             }
         };
-}
+    }
+
 }
