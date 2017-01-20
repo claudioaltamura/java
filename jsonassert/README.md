@@ -1,4 +1,4 @@
 JSONassert
 ==========
 
-examples showing what you can do the JSONassert
+examples showing what you can do with JSONassert
