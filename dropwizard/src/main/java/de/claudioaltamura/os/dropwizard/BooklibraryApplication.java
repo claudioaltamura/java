@@ -15,26 +15,25 @@ import de.claudioaltamura.os.dropwizard.resources.BookResource;
 
 public class BooklibraryApplication extends Application<BooklibraryConfiguration> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BooklibraryApplication.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BooklibraryApplication.class);
 
-    public static void main(final String[] args) throws Exception {
-        new BooklibraryApplication().run(args);
-    }
+	public static void main(final String[] args) throws Exception {
+		new BooklibraryApplication().run(args);
+	}
 
-    @Override
-    public void run(final BooklibraryConfiguration configuration, final Environment environment)
-            throws Exception {
+	@Override
+	public void run(final BooklibraryConfiguration configuration, final Environment environment) throws Exception {
 
-        LOGGER.info("Application name: {}", configuration.getAppName());
+		LOGGER.info("Application name: {}", configuration.getAppName());
 
-        BookRepository bookRepository = new BookRepository();
-        environment.jersey().register(new BookResource(bookRepository));
-        
+		BookRepository bookRepository = new BookRepository();
+		environment.jersey().register(new BookResource(bookRepository));
+
 		environment.jersey().register(new ObjectNotFoundExceptionMapper());
 		environment.jersey().register(new DuplicateEntryExceptionMapper());
 		environment.jersey().register(new UncaughtExceptionMapper());
-		
+
 		environment.healthChecks().register("BookLibraryResourceHealtCheck", new BookLibraryResourceHealtCheck());
 
-    }
+	}
 }
