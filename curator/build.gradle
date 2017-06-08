@@ -1,0 +1,5 @@
+dependencies {
+
+	compile group: 'org.apache.curator', name: 'curator-framework', version: '2.12.0'
+
+}
