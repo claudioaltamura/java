@@ -1,6 +1,6 @@
 Curator
 ==========
-Apache Curator Examples using Zookeeper Docker image
+Apache Curator Example using Zookeeper Docker image
 https://hub.docker.com/_/zookeeper/
 
 start Zookeeper Instances with
