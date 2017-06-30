@@ -1,6 +1,8 @@
 open source
 ===========
 
+Apache Curator
+
 Dropwizard
 
 Ehcache
